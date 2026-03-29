@@ -1,0 +1,407 @@
+/* Sudoku Page - Dark Theme, iPhone-optimised */
+
+.sudoku-container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── Setup Screen ── */
+.sudoku-setup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 2rem;
+}
+
+.sudoku-setup h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e6e8eb;
+  margin: 0;
+}
+
+.sudoku-setup p {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin: 0;
+  text-align: center;
+}
+
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.difficulty-btn {
+  background-color: #1a1f2e;
+  border: 2px solid #4b5563;
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  color: #e6e8eb;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  touch-action: manipulation;
+}
+
+.difficulty-btn:active {
+  transform: scale(0.96);
+}
+
+.difficulty-btn.selected {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+.difficulty-btn .diff-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e6e8eb;
+}
+
+.difficulty-btn .diff-clues {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.difficulty-btn.easy .diff-label    { color: #10b981; }
+.difficulty-btn.medium .diff-label  { color: #f59e0b; }
+.difficulty-btn.hard .diff-label    { color: #f97316; }
+.difficulty-btn.expert .diff-label  { color: #ef4444; }
+
+.difficulty-btn.easy.selected    { border-color: #10b981; background-color: rgba(16, 185, 129, 0.12); }
+.difficulty-btn.medium.selected  { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.12); }
+.difficulty-btn.hard.selected    { border-color: #f97316; background-color: rgba(249, 115, 22, 0.12); }
+.difficulty-btn.expert.selected  { border-color: #ef4444; background-color: rgba(239, 68, 68, 0.12); }
+
+.btn-start {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem 3rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+.btn-start:active {
+  background-color: #1d4ed8;
+  transform: scale(0.98);
+}
+
+/* ── Game Header ── */
+.sudoku-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.diff-badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  background-color: #252b3b;
+  border: 1px solid #374151;
+}
+
+.diff-badge.easy   { color: #10b981; border-color: #10b981; }
+.diff-badge.medium { color: #f59e0b; border-color: #f59e0b; }
+.diff-badge.hard   { color: #f97316; border-color: #f97316; }
+.diff-badge.expert { color: #ef4444; border-color: #ef4444; }
+
+.btn-new-game {
+  background-color: #374151;
+  color: #e6e8eb;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  touch-action: manipulation;
+}
+
+.btn-new-game:active {
+  background-color: #4b5563;
+}
+
+/* ── Board ── */
+.board-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: min(calc(100vw - 32px), 360px);
+  aspect-ratio: 1;
+  border: 3px solid #9ca3af;
+  border-radius: 4px;
+  background-color: #0f1419;
+  overflow: hidden;
+}
+
+/* Every cell */
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.875rem, 3.8vw, 1.25rem);
+  font-weight: 600;
+  border-right: 1px solid #374151;
+  border-bottom: 1px solid #374151;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color 0.1s;
+  position: relative;
+}
+
+/* Right edge of each 3-wide box */
+.cell:nth-child(3n) {
+  border-right: 2px solid #9ca3af;
+}
+
+/* Remove right border for rightmost column */
+.cell:nth-child(9n) {
+  border-right: none;
+}
+
+/* Bottom edge of each 3-tall box — rows 3, 6 */
+/* Row 3: cells 19-27 */
+.cell:nth-child(n+19):nth-child(-n+27) {
+  border-bottom: 2px solid #9ca3af;
+}
+
+/* Row 6: cells 46-54 */
+.cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: 2px solid #9ca3af;
+}
+
+/* Bottom row: no border */
+.cell:nth-child(n+73) {
+  border-bottom: none;
+}
+
+/* Cell states */
+.cell.given {
+  color: #e6e8eb;
+  font-weight: 700;
+  cursor: default;
+}
+
+.cell.user-entry {
+  color: #60a5fa;
+}
+
+.cell.error {
+  color: #ef4444 !important;
+  box-shadow: inset 0 0 0 2px rgba(239, 68, 68, 0.6);
+  animation: errorPulse 0.3s ease;
+}
+
+@keyframes errorPulse {
+  0%   { background-color: rgba(239, 68, 68, 0.25); }
+  100% { background-color: transparent; }
+}
+
+.cell.highlighted {
+  background-color: rgba(59, 130, 246, 0.07);
+}
+
+.cell.selected {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+}
+
+.cell.same-number {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+/* ── Number Pad ── */
+.numpad-section {
+  width: 100%;
+}
+
+.numpad-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 0.625rem;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.numpad-btn {
+  height: 56px;
+  background-color: #1a1f2e;
+  border: 2px solid #374151;
+  border-radius: 10px;
+  color: #e6e8eb;
+  font-size: 1.375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.numpad-btn:active {
+  transform: scale(0.92);
+  background-color: #252b3b;
+}
+
+.numpad-btn.active {
+  background-color: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+}
+
+.numpad-btn.erase {
+  font-size: 1.25rem;
+  color: #9ca3af;
+  border-color: #4b5563;
+}
+
+.numpad-btn.erase:active {
+  background-color: #252b3b;
+}
+
+/* Number counts (remaining) */
+.numpad-btn .num-count {
+  font-size: 0.55rem;
+  color: #6b7280;
+  position: absolute;
+  bottom: 4px;
+  right: 5px;
+  font-weight: 500;
+}
+
+.numpad-btn {
+  position: relative;
+}
+
+/* ── Win Overlay ── */
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.win-card {
+  background-color: #1a1f2e;
+  border: 2px solid #3b82f6;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  animation: slideUp 0.35s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.win-emoji {
+  font-size: 4rem;
+  margin-bottom: 0.75rem;
+}
+
+.win-card h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #e6e8eb;
+  margin: 0 0 0.5rem;
+}
+
+.win-card p {
+  color: #9ca3af;
+  margin: 0 0 2rem;
+  font-size: 1rem;
+}
+
+.btn-play-again {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.875rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  touch-action: manipulation;
+  transition: all 0.2s;
+}
+
+.btn-play-again:active {
+  background-color: #1d4ed8;
+  transform: scale(0.98);
+}
+
+/* ── Responsive ── */
+@media (min-width: 420px) {
+  .sudoku-container {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .numpad-btn {
+    height: 48px;
+    font-size: 1.125rem;
+  }
+  .numpad {
+    gap: 5px;
+  }
+}
