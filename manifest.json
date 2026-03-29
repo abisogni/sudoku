@@ -2,7 +2,7 @@
   "name": "Sudoku",
   "short_name": "Sudoku",
   "description": "Sudoku puzzle game with four difficulty levels",
-  "start_url": "/",
+  "start_url": "/sudoku/",
   "display": "standalone",
   "background_color": "#0f1419",
   "theme_color": "#0f1419",
